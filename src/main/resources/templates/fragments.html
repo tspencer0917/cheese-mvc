@@ -1,19 +1,72 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org/">
+
 <head th:fragment="head">
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title th:text="${title}">My Cheeses</title>
 
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <script type="text/javascript" th:src="@{/js/script.js}"></script>
-
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/css/custom.css}" />
+    <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
 </head>
+
 <body>
 
-<nav th:fragment="navigation">
-    <a href="/cheese">List</a>
-    <a href="/cheese/add">Add</a>
-</nav>
+    <nav th:fragment="navigation" class="navbar navbar-expand-lg navbar-light bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/cheese">
+                <img src="/images/cheese_icon.svg" class="brand-icon"/> My Cheeses
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCheese">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarCheese">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary" href="/cheese">List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary" href="/cheese/add">Add</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary" href="/cheese/remove">Remove</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div th:fragment="cheeseTable" class="container">
+        <form method="post">
+            <table class="table table-striped">
+                <thead class="thead-light">
+                <tr>
+                    <!-- TODO: Make this a checkbox that selects all cheeses -->
+                    <th th:if="${title.equals(&quot;Remove Cheese&quot;)}">
+<!--                        <input type="checkbox"/>-->
+                    </th>
+                    <th>Cheese</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cheese : ${cheeses}">
+                    <td th:if="${title.equals(&quot;Remove Cheese&quot;)}">
+                        <input type="checkbox" name="cheesesToRemove" th:value="${cheese.name}"/>
+                    </td>
+                    <td th:text="${cheese.name}"></td>
+                    <td th:text="${cheese.description}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <input th:if="${title.equals(&quot;Remove Cheese&quot;)}" type="submit" class="btn btn-primary btn-large btn-block" value="Remove Cheese" />
+        </form>
+
+        <p th:unless="${cheeses} and ${cheeses.size()}">no cheese :(</p>
+    </div>
 
 </body>
+
 </html>
